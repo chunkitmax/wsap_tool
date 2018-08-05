@@ -157,7 +157,7 @@ class WhatsApp {
       this.browser.executeScript(
         `webpackJsonp([], { ["${funcName}"]: (x, y, z) => ${memberNames[index]} = z(\'"${funcName}"\') }, "${funcName}")`
       )
-      console.info(`Init ${memberNames[index]}`)
+      // console.info(`Init ${memberNames[index]}`)
     })
   }
 }
