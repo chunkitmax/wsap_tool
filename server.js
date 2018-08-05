@@ -65,7 +65,9 @@ app.get('*', (req, res) => {
 })
 
 app.post('/conversation', (req, res) => {
-  res.json(JSON.stringify(WsapInstance.conversation))
+  if (req.session.allowAccess) {
+    res.json(JSON.stringify(WsapInstance.conversation.reverse()))
+  }
 })
 
 // Init whatsapp module
@@ -100,11 +102,5 @@ io.on('connection', (socket) => {
   })
   socket.on('check:ready', () => {
     io.to(socket.id).emit('isReady', WsapInstance.isReady)
-  })
-  socket.on('get:conversation', () => {
-    if (socket.handshake.session.allowAccess) {
-      console.log('Called', WsapInstance.conversation.length)
-      io.to(socket.id).emit('conversation', WsapInstance.conversation)
-    }
   })
 })
