@@ -20,8 +20,9 @@ class Tab {
     this.lastMsg = await lastMsgElem.getAttribute('title')
     // this.isLastMsgFromMe
     this.when = await elem.findElement(By.xpath(
-      '//div/div[not(@data-icon)]/span[not(@data-icon) and not(@title) and text()!=""]')
-    ).text
+      // './/div/div[not(@data-icon)]/span[not(@data-icon) and not(@title) and text()!="")]'
+      './div/div[position()=2]/div[position()=1]/div[position()=2]/span'
+    )).getText()
     try {
       this.picUrl = await elem.findElement(By.tagName('img')).getAttribute('src')
     } catch (e) { }
