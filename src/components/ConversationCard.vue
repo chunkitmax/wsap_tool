@@ -7,8 +7,8 @@
       :img-src="entry.picUrl"
       img-top
       tag="article"
-      style="max-width: 40em"
-      class="mb-3">
+      style="max-width: 20em"
+      class="mb-2">
       <p class="card-text align-self-end">{{ entry.when }}</p>
     </b-card>
   </b-card-group>

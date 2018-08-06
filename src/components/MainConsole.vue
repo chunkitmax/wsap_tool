@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <div class="container-fluid text-center">    
       <div class="row justify-content-md-center">
-        <div class="col-sm-10 text-left"> 
-           <conversation-card></conversation-card>
+        <div class="col-sm-10 col-md-8 col-lg-8 text-left"> 
+           <conversation-card class="card-container"></conversation-card>
         </div>
       </div>
     </div>
@@ -25,4 +25,7 @@ export default {
 </script>
 
 <style lang="scss">
+.card-container {
+  padding-top: 20px
+}
 </style>
