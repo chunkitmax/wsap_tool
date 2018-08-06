@@ -4,6 +4,8 @@
 
 ## Build Setup
 
+[Download](https://www.seleniumhq.org/download/) webdriver to the directory which is available on ```$PATH``` variable
+
 ``` bash
 # install dependencies
 npm install
@@ -18,7 +20,7 @@ npm start
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 Sometimes it may set the http & https proxy and casue the network unavailable, enter the following to fix it
-```
+``` bash
 unset http_proxy
 unset https_proxy
 ```
