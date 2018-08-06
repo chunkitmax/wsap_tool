@@ -7,6 +7,7 @@
 
         <b-navbar-nav>
           <b-nav-item href="/main">Main</b-nav-item>
+          <b-nav-item href="/online">Online Statistic</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
