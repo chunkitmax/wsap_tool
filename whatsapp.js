@@ -1,4 +1,10 @@
 const Webdriver = require('selenium-webdriver')
+const firefox = require('selenium-webdriver/firefox')
+const chrome = require('selenium-webdriver/chrome')
+const ie = require('selenium-webdriver/ie')
+const edge = require('selenium-webdriver/edge')
+const opera = require('selenium-webdriver/opera')
+const safari = require('selenium-webdriver/safari')
 const By = Webdriver.By
 const Until = Webdriver.until
 const Sleep = require('sleep')
@@ -53,9 +59,32 @@ Array.prototype.asyncForEach = async function (callback) {
 
 class WhatsApp {
   constructor(type = 'firefox', trackOnline = false) {
-    this.browser = new Webdriver.Builder()
-      .forBrowser(type)
-      .build()
+    const screen = {
+      width: 640,
+      height: 480
+    };
+    let webDriverBuilder = new Webdriver.Builder()
+    this.browser = (() => {
+      let tmpBuilder = webDriverBuilder.forBrowser(type)
+      if (process.env.NODE_ENV == 'production') {
+        switch (type) {
+          case 'firefox':
+            return tmpBuilder.setFirefoxOptions(new firefox.Options().headless().windowSize(screen))
+          case 'chrome':
+            return tmpBuilder.setChromeOptions(new chrome.Options().headless().windowSize(screen))
+          case 'ie':
+            return tmpBuilder.setIeOptions(new ie.Options().headless().windowSize(screen))
+          case 'edge':
+            return tmpBuilder.setEdgeOptions(new edge.Options().headless().windowSize(screen))
+          case 'opera':
+            return tmpBuilder.setOperaOptions(new opera.Options().headless().windowSize(screen))
+          case 'safari':
+            return tmpBuilder.setSafariOptions(new safari.Options().headless().windowSize(screen))
+        }
+      } else {
+        return tmpBuilder
+      }
+    })().build()
     this.browser.get('https://web.whatsapp.com/')
   }
   async start(onQrChanged) {
