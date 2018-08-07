@@ -17,7 +17,7 @@ var webpackConfig = merge(baseWebpackConfig, {
   externals: Object.keys(require('./package.json').dependencies),
   plugins: [
     new webpack.DefinePlugin({
-      // 'process.env': 'production'
+      'process.env': process.env.NODE_ENV
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
