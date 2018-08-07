@@ -3,7 +3,7 @@
     <div class="container-fluid text-center">    
       <div class="row justify-content-md-center">
         <div class="col-sm-10 col-md-8 col-lg-8 text-left"> 
-           <conversation-card class="card-container"></conversation-card>
+           <contact-card class="card-container"></contact-card>
         </div>
       </div>
     </div>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import Conversation from './ConversationCard'
+import ContactCard from './ContactCard'
 
 export default {
   name: "main-console",
   components: {
-    'conversation-card': Conversation
+    'contact-card': ContactCard
   },
   data() {
     return {}

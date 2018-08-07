@@ -133,12 +133,12 @@ class WhatsApp {
     // wait for side panel
     await this.browser.wait(Until.elementLocated(By.css('#pane-side')))
     Sleep.msleep(500)
-    // get all conversation
+    // get all recent contacts
     let tabs = await this.browser.findElements(By.xpath("//div[@id='pane-side']//div[@tabindex='-1']/div[@class!='']/.."))
-    this.conversation = []
+    this.recentContacts = []
     await tabs.asyncForEach(async tab => {
       let tmpTabObj = await (new Tab()).fromElem(tab)
-      this.conversation.push(tmpTabObj)
+      this.recentContacts.push(tmpTabObj)
       if (tmpTabObj.isUnread) {
         console.info(`Name: ${tmpTabObj.name}, Last Message: ${tmpTabObj.lastMsg}`)
       }

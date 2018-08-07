@@ -64,9 +64,9 @@ app.get('*', (req, res) => {
   }
 })
 
-app.post('/conversation', (req, res) => {
+app.post('/contacts', (req, res) => {
   if (req.session.allowAccess) {
-    res.json(JSON.stringify(WsapInstance.conversation.reverse()))
+    res.json(JSON.stringify(WsapInstance.recentContacts.reverse()))
   }
 })
 
