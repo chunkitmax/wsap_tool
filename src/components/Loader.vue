@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <div class="row">
-      <div id="loader">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+      <div id="loader" class="d-flex">
+        <img id="qr" :src="qr" class="align-self-stretch" v-if="this.qr!=''">
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
+        <div class="dot" :class="{'give-way':this.qr!=''}"></div>
         <div class="lading"></div>
       </div>
     </div>
@@ -25,7 +26,9 @@
 export default {
   name: "app",
   data() {
-    return {}
+    return {
+      qr: ''
+    }
   },
   sockets: {
     connect() {
@@ -35,11 +38,8 @@ export default {
     disconnect() {
       // ...
     },
-    isReady(status) {
-      if (status) {
-        clearInterval(this.timer)
-        this.$router.push('main')
-      }
+    qrChanged(newQr) {
+      this.qr = newQr
     }
   },
   methods: {
@@ -47,7 +47,16 @@ export default {
       this.$socket.emit("initialize", isAllowed => {
         if (isAllowed) {
           console.log(isAllowed)
-          this.timer = setInterval(() => this.$socket.emit('check:ready'), 3000)
+          this.timer = setInterval(() => {
+            let _this = this
+            this.$socket.emit('check:ready', status => {
+               if (status) {
+                clearInterval(_this.timer)
+                _this.$router.push('main')
+              }
+            }),
+            3000
+          })
         } else {
           this.showDeniedMsg()
         }
@@ -66,6 +75,7 @@ export default {
 </script>
 
 <style lang="scss">
+#qr {}
 #loader {
   bottom: 0;
   height: 175px;
@@ -75,16 +85,12 @@ export default {
   right: 0;
   top: 0;
   width: 175px;
+
+  animation: fadein 3s;
 }
-#loader {
-  bottom: 0;
-  height: 175px;
-  left: 0;
-  margin: auto;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 175px;
+#loader .give-way {
+  top: 300px !important;
+  animation: fadein-top 3s;
 }
 #loader .dot {
   bottom: 0;
@@ -180,10 +186,12 @@ export default {
     transform: scale(1);
   }
 }
-@keyframes load {
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
+@keyframes fadein {
+  from  { opacity: 0; }
+  to    { opacity: 1; }
+}
+@keyframes fadein-top {
+  from  { top: 0px; }
+  to    { top: 300px; }
 }
 </style>

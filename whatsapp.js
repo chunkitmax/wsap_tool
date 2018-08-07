@@ -58,7 +58,7 @@ class WhatsApp {
       .build()
     this.browser.get('https://web.whatsapp.com/')
   }
-  async start() {
+  async start(onQrChanged) {
     // wait for qr code
     await this.browser.wait(Until.elementLocated(By.css('* img')))
     // don't remember me
@@ -72,11 +72,34 @@ class WhatsApp {
     // img = Image.open(io.BytesIO(base64.b64decode(img_base64)))
     // img.show()
     // wait for login
+    const getQrRelatedElement = async () => {
+      // wait for qr code
+      await this.browser.wait(Until.elementLocated(By.css('* img')))
+      let r1 = await this.browser.findElement(By.css('* img'))
+      let r2 = await r1.findElement(By.xpath('./..'))
+      return [r1, r2, await r2.getAttribute('data-ref')]
+    }
+    let [qrImg, imgParent, imgDataRef] = await getQrRelatedElement()
+    this.lastQr = await qrImg.getAttribute('src')
+    onQrChanged(this.lastQr)
+    Sleep.sleep(1)
     while (true) {
       await this.keepQrAlive()
+      try {
+        let tmpDataRef = await imgParent.getAttribute('data-ref')
+        if (tmpDataRef != imgDataRef) {
+          imgDataRef = tmpDataRef
+          this.lastQr = await qrImg.getAttribute('src')
+          onQrChanged(this.lastQr)
+        }
+      } catch (e) {
+        [qrImg, imgParent, imgDataRef] = await getQrRelatedElement()
+        Sleep.sleep(1)
+      }
       if (await this.checkLogin())
         break
     }
+    delete this.lastQr
     this.isLoggedIn = true
     // wait for side panel
     await this.browser.wait(Until.elementLocated(By.css('#pane-side')))
@@ -116,6 +139,9 @@ class WhatsApp {
     } catch (e) {
       return true
     }
+  }
+  getCurrentQr() {
+    return this.lastQr
   }
   async initApi() {
     // get all scripts

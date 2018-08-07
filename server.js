@@ -70,10 +70,6 @@ app.post('/conversation', (req, res) => {
   }
 })
 
-// Init whatsapp module
-let WsapInstance = new WhatsApp()
-WsapInstance.start()
-
 // Bind the app to this port.
 let server = app.listen(8080)
 
@@ -82,6 +78,17 @@ let io = SocketIo(server)
 
 io.use(SharedSession(session, { autoSave: true }))
 
+// Init whatsapp module
+let WsapInstance = new WhatsApp()
+let qrListener = null
+function onQrChanged(newQr) {
+  if (qrListener) {
+    qrListener(newQr)
+  }
+}
+WsapInstance.start(onQrChanged)
+
+// SocketIo
 const MAX_CONNECTION = 1
 let connectionCount = 0
 
@@ -92,6 +99,13 @@ io.on('connection', (socket) => {
       connectionCount++
       socket.handshake.session.allowAccess = true
       socket.handshake.session.save()
+      qrListener = (newQr) => {
+        io.to(socket.id).emit('qrChanged', newQr)
+      }
+      let tmpQr = WsapInstance.getCurrentQr()
+      if (tmpQr) {
+        qrListener(tmpQr)
+      }
     }
     func(socket.handshake.session.allowAccess)
   })
