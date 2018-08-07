@@ -10,7 +10,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.use(VueSocketio, socketio('http://localhost:8100'))
+Vue.use(VueSocketio, socketio('http://localhost:8080'))
 Vue.use(BootstrapVue)
 Vue.use(AsyncComputed)
 

@@ -75,7 +75,7 @@ let WsapInstance = new WhatsApp()
 WsapInstance.start()
 
 // Bind the app to this port.
-let server = app.listen(8100)
+let server = app.listen(8080)
 
 // Init socket.io
 let io = SocketIo(server)
