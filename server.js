@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
       connectionCount--
     }
   })
-  socket.on('check:ready', () => {
-    io.to(socket.id).emit('isReady', WsapInstance.isReady)
+  socket.on('check:ready', (callback) => {
+    callback(WsapInstance.isReady)
   })
 })
