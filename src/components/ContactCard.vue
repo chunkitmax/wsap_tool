@@ -25,7 +25,6 @@ export default {
     }
   },
   created() {
-    console.log('created')
     // this.$socket.emit('get:contact')
     axios({ method: "POST", "url": '/contacts', responseType: 'json' }).then(res => {
       this.contacts = res.data
