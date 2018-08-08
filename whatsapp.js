@@ -90,11 +90,11 @@ class WhatsApp {
   async start(onQrChanged) {
     // wait for qr code
     await this.browser.wait(Until.elementLocated(By.css('* img')))
-    // don't remember me
-    let rememberMe = await this.browser.findElement(By.xpath('//input[@name="rememberMe"]'))
-    if (rememberMe) {
-      rememberMe.click()
-    }
+    // // don't remember me
+    // let rememberMe = await this.browser.findElement(By.xpath('//input[@name="rememberMe"]'))
+    // if (rememberMe) {
+    //   rememberMe.click()
+    // }
     // get base64 string of qr code and shown as image (from my python code)
     // img_src = browser.find_element('* img').get_attribute('src')
     // img_base64 = re.search(r'^data:image/png;base64,(.+)$', img_src).group(1)
@@ -210,11 +210,10 @@ class WhatsApp {
       })
       let funcName = funcNameExtractor[index].exec(jsData)[1]
       this.browser.executeScript(`${memberNames[index]} = {}`)
-      console.log(`webpackJsonp([], { ["${funcName}"]: (x, y, z) => ${memberNames[index]} = z(\'"${funcName}"\') }, "${funcName}")`)
       this.browser.executeScript(
         `webpackJsonp([], { ["${funcName}"]: (x, y, z) => ${memberNames[index]} = z(\'"${funcName}"\') }, "${funcName}")`
       )
-      console.info(`Init ${memberNames[index]}`)
+      // console.info(`Init ${memberNames[index]}`)
     })
   }
 }
