@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Loader from '../components/Loader.vue'
 import MainConsole from '../components/MainConsole.vue'
+import OnlineStat from '../components/OnlineStatistic.vue'
 
 Vue.use(Router)
 
@@ -12,7 +13,8 @@ export function createRouter () {
     mode: 'history',
     routes: [
       { path: '/', component: Loader },
-      { path: '/main', component: MainConsole }
+      { path: '/main', component: MainConsole },
+      { path: '/online', component: OnlineStat }
     ]
   })
 }
