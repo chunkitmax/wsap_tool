@@ -179,14 +179,14 @@ class WhatsApp {
       new RegExp(/\/app\..+js/),
       new RegExp(/\/app2\..+js/)
     ]
-    let appSrcLoc = []
+    let appSrcLoc = [null, null]
     // find app script location
     await scripts.asyncForEach(async script => {
       try {
         let src = await script.getAttribute('src')
         appSrcExtractors.forEach((extractor, index) => {
           if (extractor.test(src)) {
-            appSrcLoc.push([src, index])
+            appSrcLoc[index] = [src, index]
           }
         })
       } catch (e) { } // some script elements may not have src attribute
@@ -210,10 +210,11 @@ class WhatsApp {
       })
       let funcName = funcNameExtractor[index].exec(jsData)[1]
       this.browser.executeScript(`${memberNames[index]} = {}`)
+      console.log(`webpackJsonp([], { ["${funcName}"]: (x, y, z) => ${memberNames[index]} = z(\'"${funcName}"\') }, "${funcName}")`)
       this.browser.executeScript(
         `webpackJsonp([], { ["${funcName}"]: (x, y, z) => ${memberNames[index]} = z(\'"${funcName}"\') }, "${funcName}")`
       )
-      // console.info(`Init ${memberNames[index]}`)
+      console.info(`Init ${memberNames[index]}`)
     })
   }
 }
