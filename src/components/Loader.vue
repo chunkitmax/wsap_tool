@@ -31,15 +31,11 @@ export default {
     }
   },
   sockets: {
-    connect() {
-      // ...
-      console.log("connected");
-    },
-    disconnect() {
-      // ...
-    },
     qrChanged(newQr) {
       this.qr = newQr
+    },
+    loggedIn() {
+      this.qr = ''
     }
   },
   methods: {
@@ -75,7 +71,6 @@ export default {
 </script>
 
 <style lang="scss">
-#qr {}
 #loader {
   bottom: 0;
   height: 175px;
