@@ -31,6 +31,9 @@ export default {
     }
   },
   sockets: {
+    disconnect() {
+      this.qr = ''
+    },
     qrChanged(newQr) {
       this.qr = newQr
     },

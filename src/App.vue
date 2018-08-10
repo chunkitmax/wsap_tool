@@ -38,6 +38,11 @@ export default {
   name: "app",
   data() {
     return {}
+  },
+  sockets: {
+    disconnect() {
+      this.$router.replace('/')
+    }
   }
 }
 </script>
