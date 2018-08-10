@@ -81,13 +81,15 @@ async function main() {
   })
 
   app.get('/icon', async (req, res) => {
-    if (req.query.e) {
-      let buffer = await WsapInstance.getImage(decodeURIComponent(req.query.e))
-      res.writeHead(200, { 'content-type': 'image/jpg' })
-      res.end(buffer.split(',')[1], 'base64')
-    } else {
-      res.sendStatus(404)
-    }
+    try {
+      if (req.query.e) {
+        let buffer = await WsapInstance.getImage(decodeURIComponent(req.query.e))
+        res.writeHead(200, { 'content-type': 'image/jpg' })
+        res.end(buffer.split(',')[1], 'base64')
+        return
+      }
+    } catch (e) {}
+    res.sendStatus(404)
   })
 
   app.get('*', (req, res) => {
