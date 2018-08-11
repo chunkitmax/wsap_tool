@@ -1,9 +1,9 @@
 const Express = require('express')
 const Fs = require('fs')
-const Assert = require('assert')
 const Path = require('path')
 const BodyParser = require('body-parser')
 const SocketIo = require('socket.io')
+const LruCache = require('lru-cache')
 const Session = require('express-session')
 const SharedSession = require('express-socket.io-session')
 const Database = require('./database')
@@ -39,6 +39,12 @@ async function main() {
   app.use(session)
 
   app.use('/dist', Express.static(Path.join(__dirname, './dist')))
+
+  let cache = LruCache({
+    maxAge: 500,
+    length: (n, key) => n.length,
+    maxAge: 1000*60*60*3
+  })
 
   // Init whatsapp module
   let WsapInstance = new WhatsApp()
@@ -83,12 +89,22 @@ async function main() {
   app.get('/icon', async (req, res) => {
     try {
       if (req.query.e) {
-        let buffer = await WsapInstance.getImage(decodeURIComponent(req.query.e))
-        res.writeHead(200, { 'content-type': 'image/jpg' })
-        res.end(buffer.split(',')[1], 'base64')
+        let buffer = null
+        if (cache.has(req.query.e)) {
+          buffer = cache.get(req.query.e)
+        } else {
+          let imgStr = await WsapInstance.getImage(decodeURIComponent(req.query.e))
+          buffer = new Buffer(imgStr.split(',')[1], 'base64')
+          cache.set(req.query.e, buffer)
+        }
+        res.writeHead(200, {
+          'content-type': 'image/jpg',
+          'access-control-allow-headers': 'my-header,X-Requested-With,content-type,Authorization,cache-control'
+        })
+        res.end(buffer)
         return
       }
-    } catch (e) {}
+    } catch (err) {}
     res.sendStatus(404)
   })
 
