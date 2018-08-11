@@ -78,6 +78,8 @@ async function main() {
           newRecord['probability'].push(tmpProbability)
         }
         (new Record(newRecord)).save()
+        await WsapInstance.setPresenceHook(req.body.phoneNo)
+        res.sendStatus(200)
       } else {
         res.status(403).end('Already have an entry with same phone number')
       }
