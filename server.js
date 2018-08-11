@@ -71,7 +71,7 @@ async function main() {
       if (foundCount == 0) {
         let newRecord = req.body
         newRecord['probability'] = []
-        for (let i = 0; i <= 7; i++) {
+        for (let i = 0; i < 7; i++) {
           let tmpProbability = { dayOfWeek: i, count: [] }
           for (let j = 0; j < 288; j++)
             tmpProbability.count.push(0)
