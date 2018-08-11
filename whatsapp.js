@@ -140,15 +140,7 @@ class WhatsApp {
     await this.browser.wait(Until.elementLocated(By.css('#pane-side')))
     Sleep.msleep(500)
     // get all recent contacts
-    let tabs = await this.browser.findElements(By.xpath("//div[@id='pane-side']//div[@tabindex='-1']/div[@class!='']/.."))
-    this.recentContacts = []
-    await tabs.asyncForEach(async tab => {
-      let tmpTabObj = await (new Tab()).fromElem(tab)
-      this.recentContacts.push(tmpTabObj)
-      if (tmpTabObj.isUnread) {
-        console.info(`Name: ${tmpTabObj.name}, Last Message: ${tmpTabObj.lastMsg}`)
-      }
-    })
+    await this.updateRecentContact()
     await this.initApi()
     this.isReady = true
     // this.browser.close()
@@ -300,10 +292,23 @@ class WhatsApp {
         reader.readAsDataURL(request.response)
         reader.addEventListener('loadend', () => {
           arguments[arguments.length - 1](reader.result)
+          request = null
         })
       })
       `
     )
+  }
+  async updateRecentContact() {
+    let tabs = await this.browser.findElements(By.xpath("//div[@id='pane-side']//div[@tabindex='-1']/div[@class!='']/.."))
+    this.recentContacts = []
+    await tabs.asyncForEach(async tab => {
+      let tmpTabObj = await (new Tab()).fromElem(tab)
+      this.recentContacts.push(tmpTabObj)
+      if (tmpTabObj.isUnread) {
+        console.info(`Name: ${tmpTabObj.name}, Last Message: ${tmpTabObj.lastMsg}`)
+      }
+    })
+    return this.recentContacts
   }
 }
 
