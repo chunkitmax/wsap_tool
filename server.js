@@ -61,21 +61,23 @@ async function main() {
   // Define endpoints
   app.get('/contacts', async (req, res) => {
     if (req.session.allowAccess) {
-      res.json(JSON.stringify(WsapInstance.recentContacts.reverse()))
+      res.json(WsapInstance.recentContacts)
     }
   })
 
   app.post('/contacts', async (req, res) => {
-    if (['name', 'phoneNo'].every(field => req.body[field])) {
+    if (req.session.allowAccess && ['name', 'phoneNo'].every(field => req.body[field])) {
       let foundCount = await Record.where({ phoneNo: req.body.phoneNo }).count().exec()
       if (foundCount == 0) {
         let newRecord = req.body
-        newRecord['probability'] = []
+        newRecord['lastOnline'] = -2
+        newRecord['lastUpdate'] = 0
+        newRecord['distributions'] = []
         for (let i = 0; i < 7; i++) {
-          let tmpProbability = { dayOfWeek: i, count: [] }
+          let tmpDistribution = { dayOfWeek: i, counts: [] }
           for (let j = 0; j < 288; j++)
-            tmpProbability.count.push(0)
-          newRecord['probability'].push(tmpProbability)
+            tmpDistribution.counts.push(0)
+          newRecord['distributions'].push(tmpDistribution)
         }
         (new Record(newRecord)).save()
         await WsapInstance.setPresenceHook(req.body.phoneNo)
@@ -85,6 +87,13 @@ async function main() {
       }
     } else {
       res.status(404).end('Required parameter(s) not provided')
+    }
+  })
+
+  app.get('/online-statistic', async (req, res) => {
+    if (req.session.allowAccess) {
+      let records = await Record.find({}, { name: 1, distributions: 1 }).exec()
+      res.json(records)
     }
   })
 
@@ -224,11 +233,11 @@ async function main() {
         }
         let lastDate = new Date(lastOnline)
         let timeslotIndex = Math.floor((lastDate.getHours()*60 + lastDate.getMinutes()) / 5)
-        let affectCount = Math.ceil((date - lastOnline) / 300000)
+        let affectCount = ((date - date % 300000) - (lastOnline - lastOnline % 300000)) / 300000 + 1
         let updateObj = { $inc: {}, $set: { lastOnline: -1 } }
         for (let j = lastDate.getDay(); j <= date.getDay(); j++) {
           for (let i = timeslotIndex; i < 288 && affectCount > 0; i++, affectCount--) {
-            updateObj['$inc'][`probability.${j}.count.${i}`] = 1
+            updateObj['$inc'][`distributions.${j}.counts.${i}`] = 1
           }
           timeslotIndex = 0
         }

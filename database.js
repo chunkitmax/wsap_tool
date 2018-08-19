@@ -5,7 +5,7 @@ class Database {
     this.url = url
   }
   connect() {
-    return Mongoose.connect('mongodb://localhost/wsap_tool').then(() => {
+    return Mongoose.connect('mongodb://localhost:27017/wsap_tool').then(() => {
       return Mongoose.model('OnlineRecord', Database.OnlineRecord)
     })
   }
@@ -13,7 +13,7 @@ class Database {
     return new Mongoose.Schema({
       name: String,
       phoneNo: Number,
-      probability: [{ dayOfWeek: Number, count: [Number] }],
+      distributions: [{ dayOfWeek: Number, counts: [Number] }],
       lastOnline: Number,
       lastUpdate: Number
     })

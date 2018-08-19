@@ -21,7 +21,7 @@
 import axios from "axios"
 
 export default {
-  name: "contact-card",
+  name: "contacts",
   data() {
     return {
       contacts: []

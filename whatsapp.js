@@ -308,7 +308,7 @@ class WhatsApp {
         console.info(`Name: ${tmpTabObj.name}, Last Message: ${tmpTabObj.lastMsg}`)
       }
     })
-    return this.recentContacts
+    return this.recentContacts.reverse()
   }
 }
 

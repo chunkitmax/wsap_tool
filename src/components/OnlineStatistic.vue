@@ -7,14 +7,21 @@
         <b-btn variant="outline-success" @click="sendContact">Add</b-btn>
       </b-input-group>
     </div>
+    <div class="row">
+      <online-graph></online-graph>
+    </div>
   </div>
 </template>
 
 <script>
+import OnlineGraph from "./OnlineGraph"
 import axios from "axios"
 
 export default {
   name: "online-stat",
+  components: {
+    'online-graph': OnlineGraph
+  },
   data() {
     return {
       name: "",
